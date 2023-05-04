@@ -1,11 +1,13 @@
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
+import { appUrl } from "./GlobalVariables"
 
 const auth = getAuth()
 
 async function login(email, password) {
     try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password)
-        sessionStorage.setItem("token", userCredential._tokenResponse)
+        const { _tokenResponse } = await signInWithEmailAndPassword(auth, email, password)
+        sessionStorage.setItem("token", _tokenResponse.idToken)
+        sessionStorage.setItem("email", _tokenResponse.email)
         return {
             success: true,
             message: ""
@@ -38,9 +40,15 @@ async function login(email, password) {
 async function isLoggedIn() {
     const token = sessionStorage.getItem("token")
     if(!token) return false
-    // check if signed in here
-    // https://firebase.google.com/docs/auth/admin/verify-id-tokens#java
-    return true
+    try {
+        const res = await fetch(appUrl + "/api/v1/auth/" + token)
+        const json = await res.json()
+        return json.success;
+    } catch(ex) {
+        console.error("Error validating token")
+        console.error(ex)
+        return false;
+    }
 }
 
 export {
