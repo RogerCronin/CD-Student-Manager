@@ -1,19 +1,13 @@
 :root {
-    --color-bg: #ECECEC;
-    --color-white: #FFFFFF;
-    --color-dark-gray: #4A4A4A;
-    --color-gray: #919191;
-    --color-light-gray: #D7D6D7;
-    --color-light-green: #F0FDE6;
-    --color-green: #626D5B;
-    --color-dark-green: #495045;
-    --color-blue: #609AC1;
+    --color-dark-gray: #444444;
+    --color-light-gray: #676767;
+    --color-orange: #F47D26;
+    --color-blue: #243E90;
 }
 
-/*
 body {
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    font-family: Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -22,4 +16,3 @@ body {
 ::-webkit-scrollbar {
     display: none;
 }
-*/

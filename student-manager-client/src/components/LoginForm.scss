@@ -1,0 +1,18 @@
+.LoginForm {
+    width: 100vw;
+    height: 100vh;
+
+    .wrapper {
+        width: 500px;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+
+        input {
+            width: 80%;
+        }
+    }
+}
