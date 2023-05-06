@@ -51,7 +51,12 @@ async function isLoggedIn() {
     }
 }
 
+async function logout() {
+    sessionStorage.clear()
+}
+
 export {
     login,
-    isLoggedIn
+    isLoggedIn,
+    logout
 }

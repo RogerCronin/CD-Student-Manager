@@ -1,8 +1,13 @@
+import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { login } from "../services/AuthService"
+import { login, logout } from "../services/AuthService"
 
 export default function Login() {
     const navigate = useNavigate()
+
+    useEffect(() => {
+        logout()
+    })
 
     const handleSubmit = async e => {
         e.preventDefault()
