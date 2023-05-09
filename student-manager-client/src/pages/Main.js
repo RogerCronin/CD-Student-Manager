@@ -1,10 +1,7 @@
-export default function Main() {
-    const email = sessionStorage.getItem("email")
+import { MainComponent } from "../components/MainComponent"
 
+export default function Main() {
     return (
-        <div>
-            <h1>Hello!</h1>
-            <p>Logged in as {email}</p>
-        </div>
+        <MainComponent/>
     )
 }

@@ -1,0 +1,30 @@
+div.Main {
+    margin: 0 2rem;
+
+    .login-actions {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+
+        button {
+            margin: 0.5rem;
+            padding: 0.25rem 0.5rem;
+            width: 100px;
+            height: 2rem;
+            background-color: var(--color-orange);
+            border: 0;
+            border-radius: 0.5rem;
+            color: white;
+        }
+    }
+
+    table {
+        text-align: center;
+        width: 100%;
+
+        td, th {
+            padding: 0.5rem;
+        }
+    }
+}

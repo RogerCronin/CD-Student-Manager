@@ -16,10 +16,4 @@ export default function LoginHold() {
     }, [setLoggedIn, navigate])
 
     if(loggedIn) return <Main/>
-
-    return (
-        <div>
-            <h1>Logging in...</h1>
-        </div>
-    )
 }
