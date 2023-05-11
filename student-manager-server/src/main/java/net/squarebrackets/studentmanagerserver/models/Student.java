@@ -1,31 +1,22 @@
 package net.squarebrackets.studentmanagerserver.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
-@Entity
+@Getter
+@Setter
 @NoArgsConstructor(force = true)
-@Data
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class Student {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    private String id;
     @NonNull
     private String firstName;
     @NonNull
     private String lastName;
     @NonNull
-    private int grade;
+    private Integer grade;
     @NonNull
-    private int age;
+    private Long birthdate;
     @NonNull
     private String email;
     @NonNull
@@ -34,12 +25,12 @@ public class Student {
     @Override
     public String toString() {
         return String.format(
-            "Student{id=%d, firstName=%s, lastName=%s, grade=%d, age=%d, email=%s, school=%s}",
+            "Student{id=%s, firstName=%s, lastName=%s, grade=%d, birthdate=%s, email=%s, school=%s}",
             id,
             firstName,
             lastName,
             grade,
-            age,
+            birthdate,
             email,
             school
         );

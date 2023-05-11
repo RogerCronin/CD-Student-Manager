@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface StudentService {
     Student create(Student student) throws ResourceCreationException;
-    Student getById(Long id) throws ResourceNotFoundException;
+    Student getById(String id) throws ResourceNotFoundException;
     Student getByEmail(String email) throws ResourceNotFoundException;
     List<Student> getAll();
-    Student update(Long id, Student update) throws ResourceNotFoundException;
-    void delete(Long id) throws ResourceNotFoundException;
+    Student update(String id, Student update) throws ResourceNotFoundException;
+    void delete(String id) throws ResourceNotFoundException;
 }

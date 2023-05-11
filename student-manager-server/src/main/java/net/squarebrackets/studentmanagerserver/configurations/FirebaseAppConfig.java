@@ -10,11 +10,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 @Configuration
-public class Firebase {
+public class FirebaseAppConfig {
     private static final String PATH_TO_CONFIG = "./secrets/admin-sdk-secrets.json";
 
     @Bean
-    FirebaseApp createFirebaseApp() throws IOException {
+    public FirebaseApp createFirebaseApp() throws IOException {
         try(FileInputStream serviceAccount = new FileInputStream(PATH_TO_CONFIG)) {
             FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))

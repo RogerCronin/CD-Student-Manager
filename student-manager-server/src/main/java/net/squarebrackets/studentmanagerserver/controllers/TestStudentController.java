@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/v1/students")
-public class StudentController {
+//@RestController
+@RequestMapping("/api/test/students")
+public class TestStudentController {
     private final StudentService studentService;
     private final AuthenticationService authenticationService;
 
     @Autowired
-    public StudentController(StudentService studentService, AuthenticationService authenticationService) {
+    public TestStudentController(StudentService studentService, AuthenticationService authenticationService) {
         this.studentService = studentService;
         this.authenticationService = authenticationService;
     }
@@ -28,9 +28,6 @@ public class StudentController {
     public ResponseEntity<List<Student>> getAll(
         @RequestHeader("token") String token
     ) {
-        if(!authenticationService.tokenHasAdminPrivileges(token)) {
-            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-        }
         List<Student> students = studentService.getAll();
         return new ResponseEntity<>(students, HttpStatus.OK);
     }
@@ -40,9 +37,6 @@ public class StudentController {
         @RequestHeader("token") String token,
         @RequestBody Student student
     ) {
-        if(!authenticationService.tokenHasAdminPrivileges(token)) {
-            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-        }
         student = studentService.create(student);
         return new ResponseEntity<>(student, HttpStatus.CREATED);
     }
@@ -52,9 +46,6 @@ public class StudentController {
         @RequestHeader("token") String token,
         @PathVariable("id") String id
     ) {
-        if(!authenticationService.tokenHasAdminPrivileges(token)) {
-            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-        }
         Student student = studentService.getById(id);
         return new ResponseEntity<>(student, HttpStatus.OK);
     }
@@ -65,9 +56,6 @@ public class StudentController {
         @PathVariable("id") String id,
         @RequestBody Student student
     ) {
-        if(!authenticationService.tokenHasAdminPrivileges(token)) {
-            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-        }
         student = studentService.update(id, student);
         return new ResponseEntity<>(student, HttpStatus.ACCEPTED);
     }
@@ -77,9 +65,6 @@ public class StudentController {
         @RequestHeader("token") String token,
         @PathVariable("id") String id
     ) {
-        if(!authenticationService.tokenHasAdminPrivileges(token)) {
-            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-        }
         try {
             studentService.delete(id);
             return new ResponseEntity<>(new SuccessResponse(true), HttpStatus.OK);

@@ -1,62 +1,96 @@
 package net.squarebrackets.studentmanagerserver.services;
 
+import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.*;
 import net.squarebrackets.studentmanagerserver.models.Student;
 import net.squarebrackets.studentmanagerserver.other.ResourceCreationException;
 import net.squarebrackets.studentmanagerserver.other.ResourceNotFoundException;
-import net.squarebrackets.studentmanagerserver.repos.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 @Service
 public class StudentServiceImpl implements StudentService {
-    private StudentRepository studentRepository;
+    private final CollectionReference studentDB;
 
     @Autowired
-    public StudentServiceImpl(StudentRepository studentRepository) {
-        this.studentRepository = studentRepository;
+    public StudentServiceImpl(Firestore firestore) {
+        studentDB = firestore.collection("students");
     }
 
     @Override
     public Student create(Student student) throws ResourceCreationException {
-        return studentRepository.save(student);
+        String id = UUID.randomUUID().toString();
+        DocumentReference ref = studentDB.document(id);
+        student.setId(id);
+        ApiFuture<WriteResult> res = ref.set(student);
+        try {
+            res.get();
+            return student;
+        } catch(InterruptedException | ExecutionException ex) {
+            throw new ResourceCreationException();
+        }
     }
 
     @Override
-    public Student getById(Long id) throws ResourceNotFoundException {
-        return studentRepository.findById(id).orElseThrow(
-            () -> new ResourceNotFoundException(String.format("No student with ID %d", id))
-        );
+    public Student getById(String id) throws ResourceNotFoundException {
+        DocumentReference ref = studentDB.document(id);
+        try {
+            DocumentSnapshot document = ref.get().get();
+            if(!document.exists()) throw new ResourceNotFoundException();
+            return document.toObject(Student.class);
+        } catch(InterruptedException | ExecutionException ex) {
+            throw new ResourceNotFoundException();
+        }
     }
 
     @Override
     public Student getByEmail(String email) throws ResourceNotFoundException {
-        return studentRepository.findByEmail(email).orElseThrow(
-            () -> new ResourceNotFoundException(String.format("No student with email %s", email))
-        );
+        Query ref = studentDB.whereEqualTo("email", email);
+        try {
+            return ref.get().get().getDocuments().get(0).toObject(Student.class);
+        } catch(InterruptedException | ExecutionException | IndexOutOfBoundsException ex) {
+            throw new ResourceNotFoundException();
+        }
     }
 
     @Override
     public List<Student> getAll() {
-        return studentRepository.findAll();
+        try {
+            return studentDB.get().get().getDocuments().stream().map(
+                (document) -> document.toObject(Student.class)
+            ).toList();
+        } catch(InterruptedException | ExecutionException ex) {
+            return new ArrayList<>();
+        }
     }
 
     @Override
-    public Student update(Long id, Student student) throws ResourceNotFoundException {
-        Student oldStudent = getById(id);
-        oldStudent.setFirstName(student.getFirstName());
-        oldStudent.setLastName(student.getLastName());
-        oldStudent.setGrade(student.getGrade());
-        oldStudent.setAge(student.getAge());
-        oldStudent.setEmail(student.getEmail());
-        oldStudent.setSchool(student.getSchool());
-        return studentRepository.save(oldStudent);
+    public Student update(String id, Student update) throws ResourceNotFoundException {
+        DocumentReference ref = studentDB.document(id);
+        ref.update("firstName", update.getFirstName());
+        ref.update("lastName", update.getLastName());
+        ref.update("grade", update.getGrade());
+        ref.update("birthdate", update.getBirthdate());
+        ref.update("email", update.getEmail());
+        ref.update("school", update.getSchool());
+        try {
+            return ref.get().get().toObject(Student.class);
+        } catch(InterruptedException | ExecutionException ex) {
+            throw new ResourceNotFoundException();
+        }
     }
 
     @Override
-    public void delete(Long id) throws ResourceNotFoundException {
-        Student student = getById(id);
-        studentRepository.delete(student);
+    public void delete(String id) throws ResourceNotFoundException {
+        DocumentReference ref = studentDB.document(id);
+        ApiFuture<WriteResult> res = ref.delete();
+        try {
+            res.get();
+        } catch(InterruptedException | ExecutionException ex) {
+            throw new ResourceNotFoundException();
+        }
     }
 }
