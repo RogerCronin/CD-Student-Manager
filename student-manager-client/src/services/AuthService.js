@@ -38,7 +38,7 @@ async function login(email, password) {
 }
 
 async function isLoggedIn() {
-    const token = sessionStorage.getItem("token")
+    const token = getToken()
     if(!token) return false
     try {
         const res = await fetch(appUrl + "/api/v1/auth/" + token)
@@ -55,8 +55,20 @@ async function logout() {
     sessionStorage.clear()
 }
 
+function getToken() {
+    const token = sessionStorage.getItem("token")
+    return token ? token : null
+}
+
+function getEmail() {
+    const email = sessionStorage.getItem("email")
+    return email ? email : null
+}
+
 export {
     login,
     isLoggedIn,
-    logout
+    logout,
+    getToken,
+    getEmail
 }

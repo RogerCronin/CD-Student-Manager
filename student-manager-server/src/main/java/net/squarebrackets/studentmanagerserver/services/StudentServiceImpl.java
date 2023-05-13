@@ -70,13 +70,17 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Student update(String id, Student update) throws ResourceNotFoundException {
         DocumentReference ref = studentDB.document(id);
-        ref.update("firstName", update.getFirstName());
-        ref.update("lastName", update.getLastName());
-        ref.update("grade", update.getGrade());
-        ref.update("birthdate", update.getBirthdate());
-        ref.update("email", update.getEmail());
-        ref.update("school", update.getSchool());
+        ArrayList<ApiFuture<WriteResult>> futures = new ArrayList<>();
+        futures.add(ref.update("firstName", update.getFirstName()));
+        futures.add(ref.update("lastName", update.getLastName()));
+        futures.add(ref.update("grade", update.getGrade()));
+        futures.add(ref.update("birthdate", update.getBirthdate()));
+        futures.add(ref.update("email", update.getEmail()));
+        futures.add(ref.update("school", update.getSchool()));
         try {
+            for(ApiFuture<WriteResult> res : futures) {
+                res.get();
+            }
             return ref.get().get().toObject(Student.class);
         } catch(InterruptedException | ExecutionException ex) {
             throw new ResourceNotFoundException();

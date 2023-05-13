@@ -1,8 +1,8 @@
 import "./CenterDiv.scss"
 
-export function CenterDiv({ children }) {
+export function CenterDiv({ vertical, children }) {
     return (
-        <div className="CenterDiv">
+        <div className="CenterDiv" style={{ height: vertical ? "100vh" : "" }}>
             {children}
         </div>
     )

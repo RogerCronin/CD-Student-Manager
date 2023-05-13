@@ -1,0 +1,32 @@
+tr.Student {
+    width: 100%;
+    
+    td {
+        &.actions {
+            span {
+                cursor: pointer;
+            }
+        }
+    }
+    td:nth-child(1) {
+        width: 16%;
+    }
+    td:nth-child(2) {
+        width: 16%;
+    }
+    td:nth-child(3) {
+        width: 10%;
+    }
+    td:nth-child(4) {
+        width: 10%;
+    }
+    td:nth-child(5) {
+        width: 16%;
+    }
+    td:nth-child(6) {
+        width: 16%;
+    }
+    td:nth-child(7) {
+        width: 8%;
+    }
+}
