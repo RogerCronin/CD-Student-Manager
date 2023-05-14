@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Stream;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -22,6 +23,14 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student create(Student student) throws ResourceCreationException {
+        if(!Stream.of(
+            student.getFirstName(),
+            student.getLastName(),
+            student.getGrade(),
+            student.getAge(),
+            student.getEmail(),
+            student.getSchool()
+        ).allMatch(Objects::nonNull)) throw new ResourceCreationException();
         String id = UUID.randomUUID().toString();
         DocumentReference ref = studentDB.document(id);
         student.setId(id);
@@ -74,7 +83,7 @@ public class StudentServiceImpl implements StudentService {
         futures.add(ref.update("firstName", update.getFirstName()));
         futures.add(ref.update("lastName", update.getLastName()));
         futures.add(ref.update("grade", update.getGrade()));
-        futures.add(ref.update("birthdate", update.getBirthdate()));
+        futures.add(ref.update("age", update.getAge()));
         futures.add(ref.update("email", update.getEmail()));
         futures.add(ref.update("school", update.getSchool()));
         try {

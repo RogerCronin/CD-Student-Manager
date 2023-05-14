@@ -15,9 +15,14 @@ export function MainComponent() {
 
     useEffect(() => {
         (async function() {
+            const allStudents = await getAllStudents()
+            if(!Array.isArray(allStudents)) {
+                alert("wadda heck")
+                navigate("/login")
+            }
             setStudents(await getAllStudents())
         })()
-    }, [])
+    }, [navigate])
 
     const callUpdateStudent = async (id, newStudent) => {
         const res = await updateStudent(id, newStudent)
@@ -27,14 +32,16 @@ export function MainComponent() {
     }
 
     const callDeleteStudent = async id => {
-        return await deleteStudent(id)
+        if(await deleteStudent(id)) {
+            setStudents(students.filter(student => student.id !== id))
+        }
     }
 
     const callCreateStudent = async student => {
         const res = await createStudent(student)
         if(!res) return false
-        setStudents({ ...students, student })
-        return await res.json()
+        setStudents([...students, res])
+        return res
     }
 
     return (
@@ -64,18 +71,15 @@ export function MainComponent() {
                             return <Student
                                 key={student.id}
                                 {...student}
-                                saveUpdate={
-                                    student.id === -1 ? newStudent => {
-                                        callCreateStudent(newStudent)
-                                    } : newStudent => {
-                                        callUpdateStudent(student.id, newStudent)
-                                    }
-                                }
+                                saveUpdate={newStudent => callUpdateStudent(student.id, newStudent)}
                                 deleteStudent={() => callDeleteStudent(student.id)}
-                                defaultState={0}
                             />
                         })
                     }
+                    <Student
+                        saveUpdate={newStudent => callCreateStudent(newStudent)}
+                        isAddRow={true}
+                    />
                 </tbody>
             </table>
         </div>

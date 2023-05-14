@@ -16,6 +16,7 @@ async function createStudent(student) {
         method: "POST",
         body: JSON.stringify(student),
         headers: {
+            "Content-Type": "application/json",
             "token": getToken()
         }
     })

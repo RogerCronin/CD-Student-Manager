@@ -2,6 +2,7 @@ tr.Student {
     width: 100%;
     
     td {
+        word-wrap: break-word;
         &.actions {
             span {
                 cursor: pointer;

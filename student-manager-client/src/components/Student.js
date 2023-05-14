@@ -1,36 +1,47 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import "./Student.scss"
 
 export function Student({
     firstName,
     lastName,
     grade,
-    birthdate,
+    age,
     email,
     school,
     saveUpdate,
     deleteStudent,
-    createStudent,
-    defaultState
+    isAddRow
 }) {
-    const [state, setState] = useState(defaultState)
-    const [_firstName, _setFirstName] = useState(firstName)
-    const [_lastName, _setLastName] = useState(lastName)
-    const [_grade, _setGrade] = useState(grade)
-    const [_birthdate, _setBirthdate] = useState(birthdate)
-    const [_email, _setEmail] = useState(email)
-    const [_school, _setSchool] = useState(school)
+    const [state, setState] = useState(0)
+    const [_firstName, _setFirstName] = useState(firstName ? firstName : "")
+    const [_lastName, _setLastName] = useState(lastName ? lastName : "")
+    const [_grade, _setGrade] = useState(grade ? grade : 0)
+    const [_age, _setAge] = useState(age ? age : 0)
+    const [_email, _setEmail] = useState(email ? email : "")
+    const [_school, _setSchool] = useState(school ? school : "")
 
-    const timestampToAge = t => Math.floor((new Date().getTime() - t) / (1000 * 60 * 60 * 24 * 365))
+    useEffect(() => {
+        if(isAddRow) setState(-1)
+    }, [isAddRow])
 
     const cancel = () => {
-        _setFirstName(firstName)
-        _setLastName(lastName)
-        _setGrade(grade)
-        _setBirthdate(birthdate)
-        _setEmail(email)
-        _setSchool(school)
-        setState(0)
+        if(!isAddRow) {
+            _setFirstName(firstName)
+            _setLastName(lastName)
+            _setGrade(grade)
+            _setAge(age)
+            _setEmail(email)
+            _setSchool(school)
+            setState(0)
+        } else {
+            _setFirstName("")
+            _setLastName("")
+            _setGrade(0)
+            _setAge(0)
+            _setEmail("")
+            _setSchool("")
+            setState(-1)
+        }
     }
 
     const saveEdit = async () => {
@@ -38,15 +49,16 @@ export function Student({
             firstName: _firstName,
             lastName: _lastName,
             grade: _grade,
-            birthdate: _birthdate,
+            age: _age,
             email: _email,
             school: _school
         })
         if(res) {
+            if(isAddRow) return cancel()
             _setFirstName(res.firstName)
             _setLastName(res.lastName)
             _setGrade(res.grade)
-            _setBirthdate(res.birthdate)
+            _setAge(res.age)
             _setEmail(res.email)
             _setSchool(res.school)
             setState(0)
@@ -61,11 +73,11 @@ export function Student({
                 <td>{_firstName}</td>
                 <td>{_lastName}</td>
                 <td>{_grade}</td>
-                <td>{timestampToAge(_birthdate)}</td>
+                <td>{_age}</td>
                 <td><a href={`mailto:${_email}`} target="_blank" rel="noreferrer">{_email}</a></td>
                 <td>{_school}</td>
                 <td className="actions">
-                    <span onClick={() => setState(1)}>✏️</span> <span>🗑️</span>
+                    <span onClick={() => setState(1)}>✏️</span> <span onClick={() => setState(2)}>🗑️</span>
                 </td>
             </tr>
         )
@@ -95,9 +107,9 @@ export function Student({
                 </td>
                 <td>
                     <input
-                        type="date"
-                        value={_birthdate}
-                        onChange={e => _setBirthdate(e.target.value)}
+                        type="number"
+                        value={_age}
+                        onChange={e => _setAge(e.target.value)}
                     />
                 </td>
                 <td>
@@ -125,11 +137,25 @@ export function Student({
                 <td>{_firstName}</td>
                 <td>{_lastName}</td>
                 <td>{_grade}</td>
-                <td>{timestampToAge(_birthdate)}</td>
+                <td>{_age}</td>
                 <td><a href={`mailto:${_email}`} target="_blank" rel="noreferrer">{_email}</a></td>
                 <td>{_school}</td>
                 <td className="actions">
                     <span onClick={() => deleteStudent()}>✔️</span> <span onClick={() => cancel()}>❌</span>
+                </td>
+            </tr>
+        )
+    } else if(state === -1) {
+        return (
+            <tr className="Student">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td className="actions">
+                    <span onClick={() => setState(1)}>➕</span>
                 </td>
             </tr>
         )
