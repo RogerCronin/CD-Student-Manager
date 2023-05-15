@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import { gradeToString } from "../services/StudentService"
 import "./Student.scss"
 
 export function Student({
@@ -10,7 +11,8 @@ export function Student({
     school,
     saveUpdate,
     deleteStudent,
-    isAddRow
+    isAddRow,
+    id
 }) {
     const [state, setState] = useState(0)
     const [_firstName, _setFirstName] = useState(firstName ? firstName : "")
@@ -67,97 +69,98 @@ export function Student({
         }
     }
 
-    if(state === 0) {
-        return (
-            <tr className="Student">
-                <td>{_firstName}</td>
-                <td>{_lastName}</td>
-                <td>{_grade}</td>
-                <td>{_age}</td>
-                <td><a href={`mailto:${_email}`} target="_blank" rel="noreferrer">{_email}</a></td>
-                <td>{_school}</td>
-                <td className="actions">
-                    <span onClick={() => setState(1)}>✏️</span> <span onClick={() => setState(2)}>🗑️</span>
-                </td>
-            </tr>
-        )
-    } else if(state === 1) {
-        return (
-            <tr className="Student">
-                <td>
-                    <input
-                        type="text"
-                        value={_firstName}
-                        onChange={e => _setFirstName(e.target.value)}
-                    />
-                </td>
-                <td>
-                    <input
-                        type="text"
-                        value={_lastName}
-                        onChange={e => _setLastName(e.target.value)}
-                    />
-                </td>
-                <td>
-                    <input
-                        type="number"
-                        value={_grade}
-                        onChange={e => _setGrade(e.target.value)}
-                    />
-                </td>
-                <td>
-                    <input
-                        type="number"
-                        value={_age}
-                        onChange={e => _setAge(e.target.value)}
-                    />
-                </td>
-                <td>
-                    <input
-                        type="text"
-                        value={_email}
-                        onChange={e => _setEmail(e.target.value)}
-                    />
-                </td>
-                <td>
-                    <input
-                        type="text"
-                        value={_school}
-                        onChange={e => _setSchool(e.target.value)}
-                    />
-                </td>
-                <td className="actions">
-                    <span onClick={() => saveEdit()}>💾</span> <span onClick={() => cancel()}>❌</span>
-                </td>
-            </tr>
-        )
-    } else if(state === 2) {
-        return (
-            <tr className="Student">
-                <td>{_firstName}</td>
-                <td>{_lastName}</td>
-                <td>{_grade}</td>
-                <td>{_age}</td>
-                <td><a href={`mailto:${_email}`} target="_blank" rel="noreferrer">{_email}</a></td>
-                <td>{_school}</td>
-                <td className="actions">
-                    <span onClick={() => deleteStudent()}>✔️</span> <span onClick={() => cancel()}>❌</span>
-                </td>
-            </tr>
-        )
-    } else if(state === -1) {
-        return (
-            <tr className="Student">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td className="actions">
-                    <span onClick={() => setState(1)}>➕</span>
-                </td>
-            </tr>
-        )
+    switch(state) {
+        case 0:
+        case 2:
+            return (
+                <tr className="Student">
+                    <td>{_firstName}</td>
+                    <td>{_lastName}</td>
+                    <td>{gradeToString(_grade)}</td>
+                    <td>{_age}</td>
+                    <td><a href={`mailto:${_email}`} target="_blank" rel="noreferrer">{_email}</a></td>
+                    <td>{_school}</td>
+                    {
+                        state === 0 ? (
+                            <td className="actions">
+                                <span onClick={() => setState(1)}>✏️</span> <span onClick={() => setState(2)}>🗑️</span>
+                            </td>
+                        ) : (
+                            <td className="actions">
+                                <span onClick={() => deleteStudent()}>✔️</span> <span onClick={() => cancel()}>❌</span>
+                            </td>
+                        )
+                    }
+    
+                </tr>
+            )
+        case 1:
+            return (
+                <tr className="Student">
+                    <td>
+                        <input
+                            type="text"
+                            value={_firstName}
+                            onChange={e => _setFirstName(e.target.value)}
+                        />
+                    </td>
+                    <td>
+                        <input
+                            type="text"
+                            value={_lastName}
+                            onChange={e => _setLastName(e.target.value)}
+                        />
+                    </td>
+                    <td>
+                        <input
+                            type="number"
+                            list="student-grade-datalist"
+                            value={_grade}
+                            onChange={e => _setGrade(e.target.value)}
+                            autoComplete="new-password"
+                        />
+                    </td>
+                    <td>
+                        <input
+                            type="number"
+                            value={_age}
+                            onChange={e => _setAge(e.target.value)}
+                        />
+                    </td>
+                    <td>
+                        <input
+                            type="text"
+                            value={_email}
+                            onChange={e => _setEmail(e.target.value)}
+                        />
+                    </td>
+                    <td>
+                        <input
+                            type="text"
+                            value={_school}
+                            onChange={e => _setSchool(e.target.value)}
+                        />
+                    </td>
+                    <td className="actions">
+                        <span onClick={() => saveEdit()}>💾</span> <span onClick={() => cancel()}>❌</span>
+                    </td>
+                </tr>
+            )
+        case -1:
+            return (
+                <tr className="Student">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td className="actions">
+                        <span onClick={() => setState(1)}>➕</span>
+                    </td>
+                </tr>
+            )
+        default:
+            return <h1>Error displaying table : invalid state</h1>
     }
 }

@@ -55,10 +55,49 @@ async function deleteStudent(id) {
     return res.status === 200
 }
 
+function gradeToString(grade) {
+    switch(grade) {
+        case 0:
+            return "0th (0)"
+        case 1:
+            return "1st (1)"
+        case 2:
+            return "2nd (2)"
+        case 3:
+            return "3rd (3)"
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+            return grade + "th (" + grade + ")"
+        case 9:
+            return "Freshman HS (9)"
+        case 10:
+            return "Sophomore HS (10)"
+        case 11:
+            return "Junior HS (11)"
+        case 12:
+            return "Senior HS (12)"
+        case 13:
+            return "Freshman CL (13)"
+        case 14:
+            return "Sophomore CL (14)"
+        case 15:
+            return "Junior CL (15)"
+        case 16:
+            return "Senior CL (16)"
+        default:
+            if(grade > 16) return "Graduate Student (" + grade + ")"
+            return "Other (" + grade + ")"
+    }
+}
+
 export {
     getAllStudents,
     createStudent,
     getStudentById,
     updateStudent,
-    deleteStudent
+    deleteStudent,
+    gradeToString
 }

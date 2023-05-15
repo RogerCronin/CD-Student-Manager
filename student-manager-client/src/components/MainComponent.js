@@ -77,11 +77,31 @@ export function MainComponent() {
                         })
                     }
                     <Student
+                        id={0}
                         saveUpdate={newStudent => callCreateStudent(newStudent)}
                         isAddRow={true}
                     />
                 </tbody>
             </table>
+            <datalist id="student-grade-datalist">
+                <option value="1">1st</option>
+                <option value="2">2nd</option>
+                <option value="3">3rd</option>
+                <option value="4">4th</option>
+                <option value="5">5th</option>
+                <option value="6">6th</option>
+                <option value="7">7th</option>
+                <option value="8">8th</option>
+                <option value="9">Freshman HS (9)</option>
+                <option value="10">Sophomore HS (10)</option>
+                <option value="11">Junior HS (11)</option>
+                <option value="12">Senior HS (12)</option>
+                <option value="13">Freshman CL (13)</option>
+                <option value="14">Sophomore CL (14)</option>
+                <option value="15">Junior CL (15)</option>
+                <option value="16">Senior CL (16)</option>
+                <option value="17">Graduate Student (17)</option>
+            </datalist>
         </div>
     )
 }
