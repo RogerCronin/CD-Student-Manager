@@ -20,6 +20,13 @@ public class AuthenticationController {
         this.authenticationService = authenticationService;
     }
 
+    /**
+     * Returns a SuccessResponse depending on if the supplied user token is a valid admin.
+     * (ex: GET /api/v1/auth/{token})
+     *
+     * @param token provided user token
+     * @return      SuccessResponse with error message
+     */
     @GetMapping("{token}")
     public ResponseEntity<SuccessResponse> validateToken(@PathVariable("token") String token) {
         boolean isAdmin = authenticationService.tokenHasAdminPrivileges(token);

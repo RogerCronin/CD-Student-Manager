@@ -16,6 +16,11 @@ export function LoginForm() {
         logout()
     })
 
+    /**
+     * Attempts a log in on submit click.
+     * 
+     * @param {Event} e event from submit click
+     */
     const handleSubmit = async e => {
         e.preventDefault()
         const res = await login(email, password)

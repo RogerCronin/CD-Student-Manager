@@ -15,6 +15,7 @@ public class FirebaseAppConfig {
 
     @Bean
     public FirebaseApp createFirebaseApp() throws IOException {
+        // gets admin-sdk-secrets.json and builds new FirebaseApp with it
         try(FileInputStream serviceAccount = new FileInputStream(PATH_TO_CONFIG)) {
             FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))

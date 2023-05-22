@@ -1,5 +1,8 @@
 export default function NoContent() {
     return (
-        <h1>Oops!</h1>
+        <div>
+            <h1>404</h1>
+            <p>Oops!</p>
+        </div>
     )
 }

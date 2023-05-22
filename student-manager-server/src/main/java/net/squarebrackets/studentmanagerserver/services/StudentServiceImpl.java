@@ -21,8 +21,17 @@ public class StudentServiceImpl implements StudentService {
         studentDB = firestore.collection("students");
     }
 
+    /**
+     * Creates a student in the database.
+     *
+     * @param student Student object to be persisted
+     * @return        input Student but with ID
+     *
+     * @throws ResourceCreationException when an error occurs; should never happen
+     */
     @Override
     public Student create(Student student) throws ResourceCreationException {
+        // sometimes a field can be null despite the annotations, make sure to reject it
         if(!Stream.of(
             student.getFirstName(),
             student.getLastName(),
@@ -31,7 +40,7 @@ public class StudentServiceImpl implements StudentService {
             student.getEmail(),
             student.getSchool()
         ).allMatch(Objects::nonNull)) throw new ResourceCreationException();
-        String id = UUID.randomUUID().toString();
+        String id = UUID.randomUUID().toString(); // generate a UUID for Student.id
         DocumentReference ref = studentDB.document(id);
         student.setId(id);
         ApiFuture<WriteResult> res = ref.set(student);
@@ -43,6 +52,14 @@ public class StudentServiceImpl implements StudentService {
         }
     }
 
+    /**
+     * Gets a student based on their ID.
+     *
+     * @param id ID of student to find
+     * @return   Student matching the database information
+     *
+     * @throws ResourceNotFoundException when a student with that ID cannot be found
+     */
     @Override
     public Student getById(String id) throws ResourceNotFoundException {
         DocumentReference ref = studentDB.document(id);
@@ -55,6 +72,15 @@ public class StudentServiceImpl implements StudentService {
         }
     }
 
+    /**
+     * Same as getById, but matches email instead. Matches first student with email match.
+     * Note this is unused in the current product.
+     *
+     * @param email email of student to find
+     * @return      Student matching the database information
+     *
+     * @throws ResourceNotFoundException when a student with that email cannot be found
+     */
     @Override
     public Student getByEmail(String email) throws ResourceNotFoundException {
         Query ref = studentDB.whereEqualTo("email", email);
@@ -65,6 +91,11 @@ public class StudentServiceImpl implements StudentService {
         }
     }
 
+    /**
+     * Returns a list of all students in the database.
+     *
+     * @return list of all students
+     */
     @Override
     public List<Student> getAll() {
         try {
@@ -76,10 +107,20 @@ public class StudentServiceImpl implements StudentService {
         }
     }
 
+    /**
+     * Updates a student's database entry.
+     *
+     * @param id     ID of student to update
+     * @param update Student object with values that should be changed
+     * @return       student with changes now persisted in the database
+     *
+     * @throws ResourceNotFoundException when a student with that ID cannot be found
+     */
     @Override
     public Student update(String id, Student update) throws ResourceNotFoundException {
         DocumentReference ref = studentDB.document(id);
         ArrayList<ApiFuture<WriteResult>> futures = new ArrayList<>();
+        // manually set all changes
         futures.add(ref.update("firstName", update.getFirstName()));
         futures.add(ref.update("lastName", update.getLastName()));
         futures.add(ref.update("grade", update.getGrade()));
@@ -96,6 +137,13 @@ public class StudentServiceImpl implements StudentService {
         }
     }
 
+    /**
+     * Deletes a student from the database.
+     *
+     * @param id ID of student to be deleted
+     *
+     * @throws ResourceNotFoundException when a student with that ID cannot be found
+     */
     @Override
     public void delete(String id) throws ResourceNotFoundException {
         DocumentReference ref = studentDB.document(id);

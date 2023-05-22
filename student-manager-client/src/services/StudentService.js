@@ -1,6 +1,11 @@
 import { appUrl } from "./GlobalVariables"
 import { getToken } from "./AuthService"
 
+/**
+ * Fetches the list of all students.
+ * 
+ * @returns {Student[]} list of all students
+ */
 async function getAllStudents() {
     const res = await fetch(appUrl + "/api/v1/students", {
         method: "GET",
@@ -11,6 +16,12 @@ async function getAllStudents() {
     return await res.json()
 }
 
+/**
+ * Persists a student in the database.
+ * 
+ * @param {Student} student information in Student form
+ * @returns {Student}       Student returned from the database with ID
+ */
 async function createStudent(student) {
     const res = await fetch(appUrl + "/api/v1/students", {
         method: "POST",
@@ -23,6 +34,12 @@ async function createStudent(student) {
     return res.status === 201 ? await res.json() : false
 }
 
+/**
+ * Returns one student from the database with matching ID.
+ * 
+ * @param {string} id ID of student in database
+ * @returns {Student} student matching that ID
+ */
 async function getStudentById(id) {
     const res = await fetch(appUrl + "/api/v1/students/" + id, {
         method: "GET",
@@ -32,7 +49,13 @@ async function getStudentById(id) {
     })
     return await res.json()
 }
-
+/**
+ * Persists changes to a student in the database.
+ * 
+ * @param {string} id       ID of student in database
+ * @param {Student} student new student information you want persisted
+ * @returns {Student}       the result of database persistence with changes
+ */
 async function updateStudent(id, student) {
     const res = await fetch(appUrl + "/api/v1/students/" + id, {
         method: "PUT",
@@ -45,6 +68,12 @@ async function updateStudent(id, student) {
     return res.status === 202 ? await res.json() : false
 }
 
+/**
+ * Deletes a student from the database.
+ * 
+ * @param {string} id ID of student in database
+ * @returns {boolean} whether the deletion was a success or not
+ */
 async function deleteStudent(id) {
     const res = await fetch(appUrl + "/api/v1/students/" + id, {
         method: "DELETE",
@@ -55,6 +84,12 @@ async function deleteStudent(id) {
     return res.status === 200
 }
 
+/**
+ * Converts numerical grades to grade names.
+ * 
+ * @param {number} grade grade level in integer representation
+ * @returns {string}     grade level in string representation
+ */
 function gradeToString(grade) {
     switch(grade) {
         case 0:

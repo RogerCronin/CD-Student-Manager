@@ -1,13 +1,9 @@
 package net.squarebrackets.studentmanagerserver.services;
 
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.auth.FirebaseToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
@@ -18,25 +14,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         this.firebaseAuth = firebaseAuth;
     }
 
-    ArrayList<String> adminUids = new ArrayList<>() {{
-        add("0Rv6ufOXWdW1ZyGb6sW5wtTqx6W2");
-    }};
-
+    /**
+     * Verifies a user ID token is an admin, i.e. registered user with FirebaseAuth
+     *
+     * @param idToken token to check against
+     * @return        boolean value whether the token is an admin
+     */
     @Override
     public boolean tokenHasAdminPrivileges(String idToken) {
         try {
-            FirebaseToken decodedToken = firebaseAuth.verifyIdToken(idToken);
-            String uid = decodedToken.getUid();
-            return uidHasAdminPrivileges(uid);
+            // throws FirebaseAuthException on failure
+            firebaseAuth.verifyIdToken(idToken);
+            return true;
         } catch(FirebaseAuthException ex) {
-            System.err.println("Authentication error, passed bad token?");
-            ex.printStackTrace();
             return false;
         }
-    }
-
-    @Override
-    public boolean uidHasAdminPrivileges(String uid) {
-        return adminUids.contains(uid);
     }
 }

@@ -1,4 +1,4 @@
-package net.squarebrackets.studentmanagerserver.controllers;
+package net.squarebrackets.studentmanagerserver.other;
 
 import net.squarebrackets.studentmanagerserver.models.Student;
 import net.squarebrackets.studentmanagerserver.models.SuccessResponse;

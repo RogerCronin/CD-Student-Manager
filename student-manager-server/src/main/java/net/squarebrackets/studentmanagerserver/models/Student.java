@@ -2,9 +2,6 @@ package net.squarebrackets.studentmanagerserver.models;
 
 import lombok.*;
 
-import java.util.Objects;
-import java.util.stream.Stream;
-
 @Getter
 @Setter
 @NoArgsConstructor(force = true)

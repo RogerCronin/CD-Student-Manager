@@ -17,13 +17,20 @@ export function MainComponent() {
         (async function() {
             const allStudents = await getAllStudents()
             if(!Array.isArray(allStudents)) {
-                alert("wadda heck")
+                alert("Unknown error; backend is possibly down")
                 navigate("/login")
             }
             setStudents(await getAllStudents())
         })()
     }, [navigate])
 
+    /**
+     * Calls StudentService.updateStudent.
+     * 
+     * @param {string} id          ID of student in database
+     * @param {Student} newStudent new student information you want persisted
+     * @returns {Student}          the result of database persistence with changes
+     */
     const callUpdateStudent = async (id, newStudent) => {
         const res = await updateStudent(id, newStudent)
         if(!res) return false
@@ -31,12 +38,23 @@ export function MainComponent() {
         return res
     }
 
+    /**
+     * Calls StudentService.deleteStudent.
+     * 
+     * @param {string} id ID of student in database
+     */
     const callDeleteStudent = async id => {
         if(await deleteStudent(id)) {
             setStudents(students.filter(student => student.id !== id))
         }
     }
 
+    /**
+     * Calls StudentService.createStudent.
+     * 
+     * @param {Student} student information in Student form
+     * @returns {Student}       Student returned from the database with ID
+     */
     const callCreateStudent = async student => {
         const res = await createStudent(student)
         if(!res) return false
